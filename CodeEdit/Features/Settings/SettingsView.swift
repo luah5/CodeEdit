@@ -14,9 +14,7 @@ struct SettingsView: View {
     @Environment(\.colorScheme)
     private var colorScheme
 
-    /// Variables for the selected Page, the current search text and software updater
     @State private var selectedPage: SettingsPage = SettingsPage(.general)
-    @State private var searchText: String = ""
 
     @Environment(\.presentationMode)
     var presentationMode
@@ -86,7 +84,7 @@ struct SettingsView: View {
 
     /// Searches through an array of pages to check if a page name exists in the array
     private func resultFound(_ page: SettingsPage, pages: [SettingsPage]) -> SettingsSearchResult {
-        let lowercasedSearchText = searchText.lowercased()
+        let lowercasedSearchText = model.searchText.lowercased()
         var returnedPages: [SettingsPage] = []
         var foundPage = false
 
@@ -103,27 +101,20 @@ struct SettingsView: View {
 
     /// Gets search results from a settings page and an array of settings
     @ViewBuilder
-    private func results(_ page: SettingsPage, _ settings: [SettingsPage]) -> some View {
-        if !searchText.isEmpty {
+    private func resultsView(_ page: SettingsPage, _ settings: [SettingsPage]) -> (some View)? {
+        if !model.searchText.isEmpty {
             let results: SettingsSearchResult = resultFound(page, pages: settings)
 
             if !results.pages.isEmpty && !page.isSetting {
-                SettingsPageView(page, searchText: searchText)
+                SettingsPageView(page)
 
                 ForEach(results.pages, id: \.settingName) { setting in
                     NavigationLink(value: setting) {
-                        setting.settingName.capitalized.highlightOccurrences(searchText)
+                        setting.settingName.highlightOccurrences(model.searchText)
                             .padding(.leading, 22)
                     }
                 }
-            } else if
-                page.name.rawValue.lowercased().contains(searchText.lowercased()) &&
-                !page.isSetting
-            {
-                SettingsPageView(page, searchText: searchText)
             }
-        } else if !page.isSetting {
-            SettingsPageView(page, searchText: searchText)
         }
     }
 
@@ -132,7 +123,20 @@ struct SettingsView: View {
             List(selection: $selectedPage) {
                 Section {
                     ForEach(Self.pages) { pageAndSettings in
-                        results(pageAndSettings.page, pageAndSettings.settings)
+                        let page = pageAndSettings.page
+                        let settings = pageAndSettings.settings
+
+                        // Required for there to be a default visual selection
+                        if let results = resultsView(page, settings) {
+                            results
+                        } else if
+                            page.name.rawValue.contains(model.searchText.lowercased()) &&
+                            !page.isSetting
+                        {
+                            SettingsPageView(page)
+                        } else {
+                            SettingsPageView(page)
+                        }
                     }
                 }
             }
@@ -140,7 +144,7 @@ struct SettingsView: View {
             .safeAreaInset(edge: .top, spacing: 0) {
                 List {}
                     .frame(height: 35)
-                    .searchable(text: $searchText, placement: .sidebar, prompt: "Search")
+                    .searchable(text: $model.searchText, placement: .sidebar, prompt: "Search")
                     .scrollDisabled(true)
             }
         } detail: {
@@ -194,4 +198,5 @@ struct SettingsView: View {
 class SettingsViewModel: ObservableObject {
     @Published var backButtonVisible: Bool = false
     @Published var scrolledToTop: Bool = false
+    @Published var searchText: String = ""
 }

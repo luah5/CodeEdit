@@ -10,6 +10,10 @@ import SwiftUI
 
 /// A struct for a settings page
 struct SettingsPage: Hashable, Equatable, Identifiable {
+    static func == (lhs: SettingsPage, rhs: SettingsPage) -> Bool {
+        lhs.name == rhs.name && lhs.settingName == rhs.settingName
+    }
+
     /// A struct for a sidebar icon, with a base color and SF Symbol
     enum IconResource: Equatable, Hashable {
         case system(_ name: String)

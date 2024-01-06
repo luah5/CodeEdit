@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct SettingsPageView: View {
+    @EnvironmentObject var model: SettingsViewModel
     var page: SettingsPage
-    var searchText: String
 
-    init(_ page: SettingsPage, searchText: String) {
+    init(_ page: SettingsPage) {
         self.page = page
-        self.searchText = searchText
     }
 
     var body: some View {
         NavigationLink(value: page) {
             Label {
-                page.name.rawValue.highlightOccurrences(self.searchText)
+                page.name.rawValue.highlightOccurrences(model.searchText)
                     .padding(.leading, 2)
             } icon: {
                 Group {
