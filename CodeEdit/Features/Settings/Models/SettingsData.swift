@@ -85,25 +85,44 @@ struct SettingsData: Codable, Hashable {
 
         switch name {
         case .general:
-            general.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            general.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .accounts:
-            accounts.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            accounts.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .navigation:
-            navigation.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            navigation.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .theme:
-            theme.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            theme.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .textEditing:
-            textEditing.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            textEditing.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .terminal:
-            terminal.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            terminal.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset)) }
         case .search:
-            search.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            search.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .sourceControl:
-            sourceControl.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            sourceControl.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .location:
-            LocationsSettings().searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            LocationsSettings().searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .developer:
-            developerSettings.searchKeys.forEach { settings.append(.init(name, isSetting: true, settingName: $0)) }
+            developerSettings.searchKeys.enumerated().forEach {
+                settings.append(.init(name, isSetting: true, settingName: $0.element, settingNumber: $0.offset))
+            }
         case .behavior: return [.init(name, settingName: "Error")]
         case .components: return [.init(name, settingName: "Error")]
         case .keybindings: return [.init(name, settingName: "Error")]

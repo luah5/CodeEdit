@@ -9,6 +9,8 @@ import SwiftUI
 
 /// A view that implements the `Text Editing` settings page
 struct TextEditingSettingsView: View {
+    private let sectionIDS = SectionIDs([4, 5, 2, 1])
+
     @AppSettings(\.textEditing)
     var textEditing
 
@@ -20,6 +22,7 @@ struct TextEditingSettingsView: View {
                 wrapLinesToEditorWidth
                 useSystemCursor
             }
+            .id(sectionIDS[0])
             Section {
                 fontSelector
                 fontSizeSelector
@@ -27,14 +30,18 @@ struct TextEditingSettingsView: View {
                 lineHeight
                 letterSpacing
             }
+            .id(sectionIDS[1])
             Section {
                 autocompleteBraces
                 enableTypeOverCompletion
             }
+            .id(sectionIDS[2])
             Section {
                 bracketPairHighlight
             }
+            .id(sectionIDS[3])
         }
+        .autoScrollToSection(name: .textEditing, sectionIDS)
     }
 }
 

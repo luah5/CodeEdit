@@ -13,6 +13,8 @@ struct GeneralSettingsView: View {
     private let textEditorWidth: Double = 220
     private let textEditorHeight: Double = 30
 
+    private let sectionIDS = SectionIDs([6, 2, 5, 3, 3, 3])
+
     @EnvironmentObject var updater: SoftwareUpdater
     @FocusState private var focusedField: UUID?
 
@@ -42,10 +44,12 @@ struct GeneralSettingsView: View {
                 navigatorTabBarPosition
                 inspectorTabBarPosition
             }
+            .id(sectionIDS[0])
             Section {
                 showIssues
                 showLiveIssues
             }
+            .id(sectionIDS[1])
             Section {
                 autoSave
                 revealFileOnFocusChangeToggle
@@ -53,24 +57,28 @@ struct GeneralSettingsView: View {
                 afterWindowsCloseBehaviour
                 fileExtensions
             }
+            .id(sectionIDS[2])
             Section {
                 projectNavigatorSize
                 findNavigatorDetail
                 issueNavigatorDetail
             }
+            .id(sectionIDS[3])
             Section {
                 openInCodeEditToggle
                 shellCommand
                 dialogWarnings
-
             }
+            .id(sectionIDS[4])
             Section {
                 updateChecker
                 autoUpdateToggle
                 // TODO: Uncomment when production build is released.
                 // prereleaseToggle
             }
+            .id(sectionIDS[5])
         }
+        .autoScrollToSection(name: .general, sectionIDS)
     }
 }
 
@@ -289,7 +297,6 @@ private extension GeneralSettingsView {
             } label: {
                 Text("Check for updates")
                 Text("Last checked: \(lastUpdatedString)")
-
             }
         }
     }
@@ -305,8 +312,6 @@ private extension GeneralSettingsView {
     var autoSave: some View {
         Toggle("Automatically save changes to disk", isOn: $settings.isAutoSaveOn)
     }
-
-    // MARK: - Preference Views
 
     private var lastUpdatedString: String {
         if let lastUpdatedDate = updater.lastUpdateCheckDate {

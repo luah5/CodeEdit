@@ -7,14 +7,11 @@
 
 import SwiftUI
 
-/// A struct for settings
 struct SettingsView: View {
-    @StateObject var model = SettingsViewModel()
+    @StateObject var model = SettingsViewModel.shared
     @Environment(\.colorScheme)
     private var colorScheme
 
-    /// Variables for the selected Page, the current search text and software updater
-    @State private var selectedPage: SettingsPage = Self.pages[0].page
     @State private var searchText: String = ""
     @State private var showDeveloperSettings: Bool = false
 
@@ -148,7 +145,7 @@ struct SettingsView: View {
                 .searchable(text: $searchText, placement: .sidebar, prompt: "Search")
                 .scrollDisabled(true)
                 .frame(height: 30)
-            List(selection: $selectedPage) {
+            List(selection: $model.selectedPage) {
                 Section {
                     ForEach(Self.pages) { pageAndSettings in
                         results(pageAndSettings.page, pageAndSettings.settings)
@@ -156,9 +153,12 @@ struct SettingsView: View {
                 }
             }
             .navigationSplitViewColumnWidth(215)
+            .onChange(of: model.selectedPage) { newPage in
+                model.scrollPosition = newPage.settingNumber
+            }
         } detail: {
             Group {
-                switch selectedPage.name {
+                switch model.selectedPage.name {
                 case .general:
                     GeneralSettingsView().environmentObject(updater)
                 case .accounts:
@@ -189,7 +189,7 @@ struct SettingsView: View {
                 model.backButtonVisible = false
             }
         }
-        .navigationTitle(selectedPage.name.rawValue)
+        .navigationTitle(model.selectedPage.name.rawValue)
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 if !model.backButtonVisible {
@@ -209,8 +209,8 @@ struct SettingsView: View {
                     showDeveloperSettings.toggle()
 
                     // If the developer menu is hidden and is selected, go back to default page
-                    if !showDeveloperSettings && selectedPage.name == .developer {
-                        selectedPage = Self.pages[0].page
+                    if !showDeveloperSettings && model.selectedPage.name == .developer {
+                        model.selectedPage = Self.pages[0].page
                     }
                     return nil
                 }
@@ -224,8 +224,12 @@ struct SettingsView: View {
 }
 
 class SettingsViewModel: ObservableObject {
+    static let shared: SettingsViewModel = .init()
+
     @Published var backButtonVisible: Bool = false
     @Published var scrolledToTop: Bool = false
+    @Published var selectedPage: SettingsPage = SettingsView.pages[0].page
+    @Published var scrollPosition: AnyHashable = ""
 
     /// Holds a monitor closure for the `keyDown` event
     private var keyDownEventMonitor: Any?

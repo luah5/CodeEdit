@@ -41,6 +41,7 @@ struct SettingsPage: Hashable, Equatable, Identifiable {
     let baseColor: Color?
     let isSetting: Bool
     let settingName: String
+    let settingNumber: Int
     var nameString: LocalizedStringKey {
         LocalizedStringKey(name.rawValue)
     }
@@ -52,12 +53,14 @@ struct SettingsPage: Hashable, Equatable, Identifiable {
         baseColor: Color? = nil,
         icon: IconResource? = nil,
         isSetting: Bool = false,
-        settingName: String = ""
+        settingName: String = "",
+        settingNumber: Int = 0
     ) {
         self.name = name
         self.baseColor = baseColor
         self.icon = icon
         self.isSetting = isSetting
         self.settingName = settingName
+        self.settingNumber = settingNumber
     }
 }
