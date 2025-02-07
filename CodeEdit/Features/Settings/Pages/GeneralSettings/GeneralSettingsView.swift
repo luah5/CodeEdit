@@ -13,7 +13,8 @@ struct GeneralSettingsView: View {
     private let textEditorWidth: Double = 220
     private let textEditorHeight: Double = 30
 
-    private let sectionIDS = SectionIDs([6, 2, 5, 3, 3, 3])
+    /// `SectionIDS` for scrolling to specific settings
+    @State private var sectionIDS = SectionIDs([6, 2, 5, 3, 3, 3])
 
     @EnvironmentObject var updater: SoftwareUpdater
     @FocusState private var focusedField: UUID?

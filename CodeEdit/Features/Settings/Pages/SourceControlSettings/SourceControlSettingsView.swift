@@ -11,6 +11,7 @@ struct SourceControlSettingsView: View {
     @AppSettings(\.sourceControl.general)
     var settings
 
+    @State var sectionIDS: SectionIDs = .init([100, 100])
     @State var selectedTab: String = "general"
 
     var body: some View {
@@ -28,16 +29,41 @@ struct SourceControlSettingsView: View {
                     .padding(.top, 10)
                 }
             }
+            .id(sectionIDS[0])
             if settings.sourceControlIsEnabled {
                 switch selectedTab {
                 case "general":
                     SourceControlGeneralView()
+                        .id(sectionIDS[1])
                 case "git":
                     SourceControlGitView()
+                        .id(sectionIDS[2])
                 default:
                     SourceControlGeneralView()
                 }
             }
+        }
+        .autoScrollToSection(name: .sourceControl, sectionIDS)
+        .onAppear {
+            let searchKeys = Settings.shared.preferences.sourceControl.searchKeys
+            let gitIndex = searchKeys.firstIndex(of: "Git") ?? 2
+
+            print(gitIndex)
+
+            sectionIDS = .init(
+                [
+                    .init(ids: [0]),
+                    .init(
+                        ids: Array(1...gitIndex),
+                        action: { selectedTab = "general" }
+                    ),
+                    .init(
+                        ids: Array(gitIndex...(searchKeys.count - 1)),
+                        action: { selectedTab = "git" }
+                    )
+                ]
+            )
+            print(sectionIDS)
         }
     }
 

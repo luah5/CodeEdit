@@ -11,6 +11,15 @@ struct AccountsSettingsView: View {
     @AppSettings(\.accounts.sourceControlAccounts.gitAccounts)
     var gitAccounts
 
+    @State private var sectionIDS: SectionIDs = .init(
+        [
+            Settings.shared
+                .preferences.accounts
+                .sourceControlAccounts.gitAccounts
+                .count - 1,
+            1
+        ]
+    )
     @State private var addAccountSheetPresented: Bool = false
     @State private var selectedProvider: SourceControlAccount.Provider?
 
@@ -25,6 +34,7 @@ struct AccountsSettingsView: View {
                     ForEach($gitAccounts, id: \.self) { $account in
                         AccountsSettingsAccountLink($account)
                     }
+                    .id(sectionIDS[0])
                 }
             } footer: {
                 HStack {
@@ -43,8 +53,10 @@ struct AccountsSettingsView: View {
                     })
                 }
                 .padding(.top, 10)
+                .id(sectionIDS[1])
             }
         }
+        .autoScrollToSection(name: .accounts, sectionIDS)
     }
 
     private var implementationNeeded: some View {

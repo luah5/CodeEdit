@@ -22,7 +22,9 @@ extension SettingsData {
                 "Font",
                 "Font Size",
                 "Terminal Cursor Style",
-                "Blink Cursor"
+                "Blink Cursor",
+                "Shell Integration",
+                "Use Login Shell"
             ]
             .map { NSLocalizedString($0, comment: "") }
         }

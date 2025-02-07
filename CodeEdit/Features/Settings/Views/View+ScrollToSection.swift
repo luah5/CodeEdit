@@ -20,15 +20,16 @@ struct AutoScrollToSectionModifier: ViewModifier {
     func body(content: Content) -> some View {
         ScrollViewReader { proxy in
             content
-
                 .onReceive(SettingsViewModel.shared.$selectedPage) { newPage in
-                    if name == newPage.name, let sectionID = sectionIDS.find(Int(String(describing: newPage.settingNumber)) ?? -1) {
+                    if name == newPage.name, let sectionID = sectionIDS.find(newPage.settingNumber) {
                             withAnimation {
-                                print("scrolling")
-                                // proxy.scrollTo(sectionID)
+                                proxy.scrollTo(sectionID/*, anchor: sectionID.getAnchor(for: newPage.settingNumber)*/)
+                                sectionID.performAction()
                             }
                         }
                     }
         }
+        // To not interfere with the existing SettingsForm scroll implementation
+        .scrollIndicators(.hidden)
     }
 }

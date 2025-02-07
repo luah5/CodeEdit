@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NavigationSettingsView: View {
+    @State private var sectionIDS: SectionIDs = .init([1])
+
     @AppSettings(\.navigation)
     var settings
 
@@ -16,7 +18,9 @@ struct NavigationSettingsView: View {
             Section {
                 navigationStyle
             }
+            .id(sectionIDS[0])
         }
+        .autoScrollToSection(name: .navigation, sectionIDS)
     }
 }
 

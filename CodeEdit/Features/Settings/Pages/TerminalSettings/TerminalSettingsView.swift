@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TerminalSettingsView: View {
+    @State private var sectionIDS: SectionIDs = .init([2, 1, 2, 2])
+
     @AppSettings(\.terminal)
     var settings
 
@@ -17,6 +19,7 @@ struct TerminalSettingsView: View {
                 shellSelector
                 optionAsMetaToggle
             }
+            .id(sectionIDS[0])
             Section {
                 useTextEditorFontToggle
                 if !settings.useTextEditorFont {
@@ -25,15 +28,19 @@ struct TerminalSettingsView: View {
                     fontWeightSelector
                 }
             }
+            .id(sectionIDS[1])
             Section {
                 cursorStyle
                 cursorBlink
             }
+            .id(sectionIDS[2])
             Section {
                 injectionOptions
                 useLoginShell
             }
+            .id(sectionIDS[3])
         }
+        .autoScrollToSection(name: .terminal, sectionIDS)
     }
 }
 

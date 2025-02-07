@@ -13,6 +13,8 @@ struct DeveloperSettingsView: View {
     @AppSettings(\.developerSettings.lspBinaries)
     var lspBinaries
 
+    @State private var sectionIDS: SectionIDs = .init([1])
+
     var body: some View {
         SettingsForm {
             Section {
@@ -32,6 +34,8 @@ struct DeveloperSettingsView: View {
                 Text("LSP Binaries")
                 Text("Specify the language and the absolute path to the language server binary.")
             }
+            .id(sectionIDS[0])
         }
+        .autoScrollToSection(name: .developer, sectionIDS)
     }
 }

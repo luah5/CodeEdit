@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SearchSettingsView: View {
+    @State private var sectionIDS: SectionIDs = .init([1])
+
     var body: some View {
         SettingsForm {
             Section {
@@ -19,7 +21,9 @@ struct SearchSettingsView: View {
                     "This will inherit glob patterns from the Exclude from Project setting."
                 )
             }
+            .id(sectionIDS[0])
         }
+        .autoScrollToSection(name: .search, sectionIDS)
     }
 }
 

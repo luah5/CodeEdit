@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @StateObject var model = SettingsViewModel.shared
+    @StateObject var model: SettingsViewModel = .shared
     @Environment(\.colorScheme)
     private var colorScheme
 
-    @State private var searchText: String = ""
     @State private var showDeveloperSettings: Bool = false
 
     @Environment(\.presentationMode)
@@ -97,7 +96,7 @@ struct SettingsView: View {
 
     /// Searches through an array of pages to check if a page name exists in the array
     private func resultFound(_ page: SettingsPage, pages: [SettingsPage]) -> SettingsSearchResult {
-        let lowercasedSearchText = searchText.lowercased()
+        let lowercasedSearchText = model.searchText.lowercased()
         var returnedPages: [SettingsPage] = []
         var foundPage = false
 
@@ -115,26 +114,26 @@ struct SettingsView: View {
     /// Gets search results from a settings page and an array of settings
     @ViewBuilder
     private func results(_ page: SettingsPage, _ settings: [SettingsPage]) -> some View {
-        if !searchText.isEmpty {
+        if !model.searchText.isEmpty {
             let results: SettingsSearchResult = resultFound(page, pages: settings)
 
             if !results.pages.isEmpty && !page.isSetting {
-                SettingsPageView(page, searchText: searchText)
+                SettingsPageView(page, searchText: model.searchText)
 
                 ForEach(results.pages, id: \.settingName) { setting in
                     NavigationLink(value: setting) {
-                        setting.settingName.highlightOccurrences(searchText)
+                        setting.settingName.highlightOccurrences(model.searchText)
                             .padding(.leading, 22)
                     }
                 }
-            } else if page.name.rawValue.lowercased().contains(searchText.lowercased()) && !page.isSetting {
-                SettingsPageView(page, searchText: searchText)
+            } else if page.name.rawValue.lowercased().contains(model.searchText.lowercased()) && !page.isSetting {
+                SettingsPageView(page, searchText: model.searchText)
             }
         } else if !page.isSetting {
             if page.name == .developer && !showDeveloperSettings {
                 EmptyView()
             } else {
-                SettingsPageView(page, searchText: searchText)
+                SettingsPageView(page, searchText: model.searchText)
             }
         }
     }
@@ -142,7 +141,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationSplitView {
             List { }
-                .searchable(text: $searchText, placement: .sidebar, prompt: "Search")
+                .searchable(text: $model.searchText, placement: .sidebar, prompt: "Search")
                 .scrollDisabled(true)
                 .frame(height: 30)
             List(selection: $model.selectedPage) {
@@ -153,9 +152,6 @@ struct SettingsView: View {
                 }
             }
             .navigationSplitViewColumnWidth(215)
-            .onChange(of: model.selectedPage) { newPage in
-                model.scrollPosition = newPage.settingNumber
-            }
         } detail: {
             Group {
                 switch model.selectedPage.name {
@@ -229,7 +225,7 @@ class SettingsViewModel: ObservableObject {
     @Published var backButtonVisible: Bool = false
     @Published var scrolledToTop: Bool = false
     @Published var selectedPage: SettingsPage = SettingsView.pages[0].page
-    @Published var scrollPosition: AnyHashable = ""
+    @Published var searchText: String = ""
 
     /// Holds a monitor closure for the `keyDown` event
     private var keyDownEventMonitor: Any?

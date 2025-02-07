@@ -13,8 +13,8 @@ extension SettingsData {
 
         var searchKeys: [String] {
             [
-                "General",
                 "Enable source control",
+                "General",
                 "Refresh local status automatically",
                 "Fetch and refresh server status automatically",
                 "Add and remove files automatically",
@@ -23,12 +23,15 @@ extension SettingsData {
                 "Include upstream changes",
                 "Comparison view",
                 "Source control navigator",
-                "Default branch name",
                 "Git",
                 "Author Name",
                 "Author Email",
+                "Default branch name",
                 "Prefer to rebase when pulling",
-                "Show merge commits in per-file log"
+                "Show merge commits in per-file log",
+                "Git configuration editor",
+                "Ignored files list",
+                "Ignored file patterns"
             ]
             .map { NSLocalizedString($0, comment: "") }
         }

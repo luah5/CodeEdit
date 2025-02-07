@@ -17,6 +17,9 @@ struct ThemeSettingsView: View {
     @AppSettings(\.terminal.darkAppearance)
     var useDarkTerminalAppearance
 
+    // TODO: Find a cleaner way of updating the number of themes in the SectionIDS
+    @State private var sectionIDS: SectionIDs = .init([2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+
     @State private var listView: Bool = false
     @State private var themeSearchQuery: String = ""
     @State private var filteredThemes: [Theme] = []
@@ -73,10 +76,12 @@ struct ThemeSettingsView: View {
                         ForEach(filteredThemes) { theme in
                             if let themeIndex = themeModel.themes.firstIndex(of: theme) {
                                 Divider().padding(.horizontal, 10)
+                                    .id(sectionIDS[themeIndex])
                                 ThemeSettingsThemeRow(
                                     theme: $themeModel.themes[themeIndex],
                                     active: themeModel.getThemeActive(theme)
-                                ).id(theme)
+                                )
+                                .id(theme)
                             }
                         }
                     }
@@ -90,6 +95,7 @@ struct ThemeSettingsView: View {
                     }
                     .padding(.top, 10)
                 }
+                .id(sectionIDS[1])
                 .sheet(isPresented: $themeModel.detailsIsPresented, onDismiss: {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         themeModel.isAdding = false

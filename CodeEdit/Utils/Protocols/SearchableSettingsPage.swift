@@ -8,5 +8,6 @@
 import Foundation
 
 protocol SearchableSettingsPage {
+    // var sectionIDS: SectionIDs { get }
     var searchKeys: [String] { get }
 }

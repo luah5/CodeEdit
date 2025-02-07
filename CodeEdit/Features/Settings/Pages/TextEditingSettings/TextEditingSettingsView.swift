@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A view that implements the `Text Editing` settings page
 struct TextEditingSettingsView: View {
-    private let sectionIDS = SectionIDs([4, 5, 2, 1])
+    @State private var sectionIDS = SectionIDs([4, 5, 2, 1])
 
     @AppSettings(\.textEditing)
     var textEditing
